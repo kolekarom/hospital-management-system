@@ -129,8 +129,13 @@ export default function DashboardLayout({
           path: `/dashboard/${role}/patients`,
         },
         {
-          name: "Add Record",
+          name: "Records",
           icon: FileText,
+          path: `/dashboard/${role}/records`,
+        },
+        {
+          name: "Add Record",
+          icon: PlusCircle,
           path: `/dashboard/${role}/records/add`,
         },
         {
@@ -175,7 +180,7 @@ export default function DashboardLayout({
               {getMenuItems().map((item) => (
                 <SidebarMenuItem key={item.path}>
                   <SidebarMenuButton asChild isActive={pathname === item.path}>
-                    <Link href={item.path}>
+                    <Link href={item.path} className="flex items-center gap-2">
                       <item.icon className="h-5 w-5" />
                       <span>{item.name}</span>
                     </Link>

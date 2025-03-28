@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -16,14 +15,14 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 export default function AddMedicalRecord() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const patientId = searchParams.get("patient")
+  const patientId = searchParams?.get("patient") || ""
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const [formData, setFormData] = useState({
-    patientId: patientId || "",
+    patientId: patientId,
     diagnosis: "",
     symptoms: "",
     treatment: "",
@@ -58,7 +57,7 @@ export default function AddMedicalRecord() {
 
       // Reset form after 2 seconds and redirect
       setTimeout(() => {
-        router.push("/dashboard/doctor/patients")
+        router.push("/dashboard/doctor/records")
       }, 2000)
     } catch (err: any) {
       console.error("Error adding medical record:", err)
@@ -77,7 +76,7 @@ export default function AddMedicalRecord() {
           <Check className="h-4 w-4 text-green-600 dark:text-green-400" />
           <AlertTitle>Success!</AlertTitle>
           <AlertDescription>
-            Medical record has been successfully added to the blockchain. Redirecting to patient list...
+            Medical record has been successfully added to the blockchain. Redirecting to records list...
           </AlertDescription>
         </Alert>
       ) : error ? (
@@ -207,4 +206,3 @@ export default function AddMedicalRecord() {
     </div>
   )
 }
-
