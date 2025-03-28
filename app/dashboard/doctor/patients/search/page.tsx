@@ -146,7 +146,6 @@ export default function SearchPatients() {
                   <h4 className="font-semibold">Personal Information</h4>
                   <p>Name: {patientData.name}</p>
                   <p>ID: {patientData.id}</p>
-                  <p>Date of Birth: {patientData.dateOfBirth}</p>
                   <p>Gender: {patientData.gender}</p>
                   <p>Blood Group: {patientData.bloodGroup}</p>
                 </div>
@@ -157,25 +156,24 @@ export default function SearchPatients() {
                   <p>Address: {patientData.address}</p>
                 </div>
               </div>
+
               <div>
-                <h4 className="font-semibold">Allergies</h4>
+                <h4 className="font-semibold mb-2">Allergies</h4>
                 <ul className="list-disc list-inside">
                   {patientData.allergies.map((allergy, index) => (
                     <li key={index}>{allergy}</li>
                   ))}
                 </ul>
               </div>
+
               <div>
-                <h4 className="font-semibold">Medical History</h4>
-                <div className="space-y-2">
-                  {patientData.medicalHistory.map((history, index) => (
-                    <div key={index} className="border p-2 rounded">
-                      <p>Condition: {history.condition}</p>
-                      <p>Diagnosed: {history.diagnosedDate}</p>
-                      <p>Status: {history.status}</p>
-                    </div>
-                  ))}
-                </div>
+                <h4 className="font-semibold mb-2">Medical History</h4>
+                {patientData.medicalHistory.map((record, index) => (
+                  <div key={index} className="border rounded p-3 mb-2">
+                    <p><strong>Condition:</strong> {record.condition}</p>
+                    <p><strong>Status:</strong> {record.status}</p>
+                  </div>
+                ))}
               </div>
             </div>
           </CardContent>
