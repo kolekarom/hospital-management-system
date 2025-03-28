@@ -176,13 +176,13 @@ export default function DashboardLayout({
           <SidebarContent>
             <SidebarMenu>
               {getMenuItems().map((item) => (
-                <Link href={item.path} key={item.path}>
-                  <SidebarMenuItem
-                    active={pathname === item.path}
-                    icon={item.icon}
-                  >
-                    {item.name}
-                  </SidebarMenuItem>
+                <Link
+                  href={item.path}
+                  key={item.path}
+                  className="flex items-center gap-2 px-4 py-2 hover:bg-muted"
+                >
+                  <item.icon className="h-5 w-5" />
+                  <span>{item.name}</span>
                 </Link>
               ))}
             </SidebarMenu>
