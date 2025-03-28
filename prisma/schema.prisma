@@ -1,0 +1,44 @@
+// This is your Prisma schema file
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  role          String    // doctor, patient, admin
+  profileCID    String?   // IPFS CID for profile data
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sentMessages     Message[] @relation("SentMessages")
+  receivedMessages Message[] @relation("ReceivedMessages")
+}
+
+model Message {
+  id          String    @id @default(cuid())
+  content     String
+  senderId    String
+  receiverId  String
+  sender      User      @relation("SentMessages", fields: [senderId], references: [id])
+  receiver    User      @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  attachments Json?     // Array of IPFS attachments
+  metadata    Json?     // AI analysis, tags, etc.
+  createdAt   DateTime  @default(now())
+}
+
+model IPFSData {
+  id          String    @id @default(cuid())
+  cid         String    @unique
+  name        String
+  type        String    // file type: image, document, json, etc.
+  size        Int
+  metadata    Json?     // Additional metadata
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}

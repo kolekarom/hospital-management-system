@@ -4,24 +4,34 @@ const doctorSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   phone: { type: String, required: true },
+<<<<<<< HEAD
   dateOfBirth: { type: Date },
   gender: { type: String, enum: ['male', 'female', 'other'] },
+=======
+>>>>>>> 37efade35a526788bb46d6a20b83dfb3cfbe967d
   specialization: { type: String, required: true },
   licenseNumber: { type: String, required: true, unique: true },
   walletAddress: { type: String, unique: true },
   profileImage: String,
+<<<<<<< HEAD
   emergencyContact: { type: String },
   residentialAddress: { type: String },
   experience: { type: Number },
+=======
+  experience: Number,
+>>>>>>> 37efade35a526788bb46d6a20b83dfb3cfbe967d
   qualifications: [{
     degree: String,
     institution: String,
     year: Number
   }],
+<<<<<<< HEAD
   consultationFee: { 
     amount: Number,
     currency: { type: String, default: 'INR' }
   },
+=======
+>>>>>>> 37efade35a526788bb46d6a20b83dfb3cfbe967d
   availability: [{
     day: { type: String, enum: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] },
     slots: [{
@@ -29,6 +39,13 @@ const doctorSchema = new mongoose.Schema({
       end: String
     }]
   }],
+<<<<<<< HEAD
+=======
+  consultationFee: {
+    amount: Number,
+    currency: { type: String, default: 'INR' }
+  },
+>>>>>>> 37efade35a526788bb46d6a20b83dfb3cfbe967d
   ratings: [{
     patient: {
       type: mongoose.Schema.Types.ObjectId,
@@ -48,6 +65,7 @@ const doctorSchema = new mongoose.Schema({
     sms: { type: Boolean, default: true },
     app: { type: Boolean, default: true }
   },
+<<<<<<< HEAD
   password: { type: String, required: true },
   isVerified: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now },
@@ -60,6 +78,10 @@ const doctorSchema = new mongoose.Schema({
 doctorSchema.pre('save', function(next) {
   this.updatedAt = new Date();
   next();
+=======
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now }
+>>>>>>> 37efade35a526788bb46d6a20b83dfb3cfbe967d
 });
 
 export const Doctor = mongoose.models.Doctor || mongoose.model('Doctor', doctorSchema);

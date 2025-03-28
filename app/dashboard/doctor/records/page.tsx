@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 "use client";
 
 import { useState } from "react";
@@ -109,6 +110,8 @@ export default function RecordsPage() {
     </ErrorBoundary>
   );
 =======
+=======
+>>>>>>> 37efade35a526788bb46d6a20b83dfb3cfbe967d
 "use client"
 
 import { useState } from "react"
@@ -266,5 +269,8 @@ export default function MedicalRecordsPage() {
       </Card>
     </div>
   )
+<<<<<<< HEAD
 >>>>>>> 6fd188f (changes by om)
+=======
+>>>>>>> 37efade35a526788bb46d6a20b83dfb3cfbe967d
 }

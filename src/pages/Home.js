@@ -21,7 +21,11 @@ const Home = () => {
           </div>
         </div>
         <div className="hero-image">
+<<<<<<< HEAD
           <img src="/Users/omkolekar/hospital-management-system/images/hero.jpeg" alt="Hospital Management System" />
+=======
+          <img src="images/hero.jpeg" alt="Hospital Management System" />
+>>>>>>> 37efade35a526788bb46d6a20b83dfb3cfbe967d
         </div>
       </section>
 

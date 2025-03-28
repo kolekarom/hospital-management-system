@@ -85,6 +85,7 @@ export function OverviewStats() {
         <Card key={index}>
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
+<<<<<<< HEAD
               <div className="space-y-1">
                 <p className="text-sm font-medium text-muted-foreground">{stat.title}</p>
                 {stat.loading ? (
@@ -100,6 +101,23 @@ export function OverviewStats() {
               <div className="rounded-full p-2.5 bg-muted">
                 {stat.icon}
               </div>
+=======
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">{stat.title}</p>
+                <div className="text-3xl font-bold">
+                  {stat.loading ? (
+                    <div className="h-8 w-16 animate-pulse bg-muted rounded" />
+                  ) : (
+                    <span>
+                      {stat.prefix}
+                      {stat.value.toLocaleString()}
+                    </span>
+                  )}
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">{stat.description}</p>
+              </div>
+              <div className="p-2 bg-primary/10 rounded-full text-primary">{stat.icon}</div>
+>>>>>>> 37efade35a526788bb46d6a20b83dfb3cfbe967d
             </div>
           </CardContent>
         </Card>
