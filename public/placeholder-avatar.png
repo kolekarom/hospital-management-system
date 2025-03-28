@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="200" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <!-- Background -->
+        <circle fill="#F3F4F6" cx="100" cy="100" r="100"/>
+        
+        <!-- Avatar icon -->
+        <g transform="translate(60, 60)">
+            <!-- Head -->
+            <circle fill="#9CA3AF" cx="40" cy="30" r="30"/>
+            <!-- Body -->
+            <path d="M0,80 C0,60 80,60 80,80 L80,120 L0,120 Z" fill="#9CA3AF"/>
+        </g>
+    </g>
+</svg>

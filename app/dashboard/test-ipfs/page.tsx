@@ -1,115 +1,87 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { CheckCircle, XCircle, RefreshCw } from "lucide-react";
+import { testPinataConnection } from "@/utils/ipfs-pinata";
 
-export default function TestIPFS() {
-  const [result, setResult] = useState<any>(null);
-  const [error, setError] = useState<string>('');
-  const [isLoading, setIsLoading] = useState(false);
+export default function TestIpfs() {
+  const [ipfsResult, setIpfsResult] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const testIPFSConnection = async () => {
-    setIsLoading(true);
-    setError('');
-    setResult(null);
+  const testIpfsConnection = async () => {
+    setLoading(true);
+    setError(null);
 
     try {
-      const response = await fetch('/api/test-ipfs', {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json'
-        }
-      });
-      
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to test IPFS connection');
-      }
-
-      setResult(data);
-    } catch (err) {
-      console.error('IPFS Test Error:', err);
-      let errorMessage = 'An error occurred while testing IPFS connection';
-      
-      if (err instanceof Error) {
-        errorMessage = err.message;
-      } else if (typeof err === 'string') {
-        errorMessage = err;
-      } else if (err && typeof err === 'object' && 'message' in err) {
-        errorMessage = String(err.message);
-      }
-      
-      setError(errorMessage);
-    } finally {
-      setIsLoading(false);
+      const response = await testPinataConnection();
+      setIpfsResult(response);
+      setLoading(false);
+    } catch (error) {
+      console.error("Failed to fetch IPFS test result:", error);
+      setError("Failed to fetch IPFS test result: " + (error instanceof Error ? error.message : String(error)));
+      setLoading(false);
     }
   };
 
+  useEffect(() => {
+    testIpfsConnection();
+  }, []);
+
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Test IPFS Connection</h1>
-      
-      <div className="space-y-4">
-        <button
-          onClick={testIPFSConnection}
-          disabled={isLoading}
-          className={`px-4 py-2 rounded-md text-white ${
-            isLoading 
-              ? 'bg-gray-400 cursor-not-allowed'
-              : 'bg-blue-500 hover:bg-blue-600'
-          }`}
-        >
-          {isLoading ? 'Testing...' : 'Test IPFS Connection'}
-        </button>
-
-        {error && (
-          <div className="p-4 rounded-md bg-red-50 border border-red-200 text-red-700">
-            <h3 className="font-semibold mb-2">Error</h3>
-            <p>{error}</p>
-          </div>
-        )}
-
-        {result && (
-          <div className="p-4 rounded-md bg-green-50 border border-green-200">
-            <h3 className="font-semibold mb-2 text-green-700">Success!</h3>
-            <div className="space-y-4">
-              <div>
-                <p className="text-green-700">{result.message}</p>
-              </div>
-
-              {result.upload && (
-                <div className="mt-2">
-                  <h4 className="font-medium text-gray-700">Upload Result:</h4>
-                  <div className="bg-white p-3 rounded-md mt-1 border border-gray-200">
-                    <p className="text-sm text-gray-600">IPFS CID:</p>
-                    <code className="block p-2 bg-gray-100 rounded mt-1">
-                      {result.upload.cid}
-                    </code>
-                    <p className="text-sm text-gray-600 mt-2">IPFS URL:</p>
-                    <a
-                      href={result.upload.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-500 hover:underline break-all"
-                    >
-                      {result.upload.url}
-                    </a>
-                  </div>
-                </div>
-              )}
-
-              {result.retrieved && (
-                <div className="mt-2">
-                  <h4 className="font-medium text-gray-700">Retrieved Data:</h4>
-                  <pre className="bg-gray-100 p-3 rounded-md mt-1 overflow-auto">
-                    {JSON.stringify(result.retrieved, null, 2)}
-                  </pre>
-                </div>
-              )}
+    <div className="container mx-auto p-4 max-w-3xl">
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between">
+            IPFS Connection Test
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={testIpfsConnection}
+              disabled={loading}
+              className="flex items-center gap-2"
+            >
+              <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
+              {loading ? "Testing..." : "Test Again"}
+            </Button>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {loading ? (
+            <div className="flex items-center justify-center p-6">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
             </div>
-          </div>
-        )}
-      </div>
+          ) : error ? (
+            <Alert variant="destructive">
+              <XCircle className="h-4 w-4" />
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          ) : ipfsResult ? (
+            <div className="space-y-4">
+              <Alert variant="default" className="bg-green-50 border-green-200">
+                <CheckCircle className="h-4 w-4 text-green-600" />
+                <AlertTitle className="text-green-800">Success!</AlertTitle>
+                <AlertDescription className="text-green-700">
+                  Successfully connected to Pinata and authenticated.
+                </AlertDescription>
+              </Alert>
+
+              <div className="mt-4">
+                <h3 className="text-lg font-medium">Response Details:</h3>
+                <pre className="p-2 mt-1 bg-gray-100 rounded text-sm overflow-x-auto">
+                  {JSON.stringify(ipfsResult, null, 2)}
+                </pre>
+              </div>
+            </div>
+          ) : (
+            <div>No result data available.</div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }

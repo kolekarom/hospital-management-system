@@ -94,17 +94,17 @@ export function Footer() {
               Contact Us
             </h3>
             <ul className="space-y-3 text-sm text-gray-600">
-              <li>
-                <p>123 Healthcare Street</p>
-                <p>Medical District, MD 12345</p>
+              <li className="space-y-1">
+                <div>123 Healthcare Street</div>
+                <div>Medical District, MD 12345</div>
               </li>
-              <li>
-                <p>Email: support@medichain.com</p>
-                <p>Phone: (123) 456-7890</p>
+              <li className="space-y-1">
+                <div>Email: support@medichain.com</div>
+                <div>Phone: (123) 456-7890</div>
               </li>
-              <li>
-                <p>24/7 Emergency Support</p>
-                <p>Toll-free: 1-800-MED-HELP</p>
+              <li className="space-y-1">
+                <div>24/7 Emergency Support</div>
+                <div>Toll-free: 1-800-MED-HELP</div>
               </li>
             </ul>
           </div>
@@ -114,7 +114,7 @@ export function Footer() {
         <div className="border-t border-gray-200 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-sm text-gray-600">
-              © {new Date().getFullYear()} MediChain. All rights reserved.
+              {new Date().getFullYear()} MediChain. All rights reserved.
             </p>
             <div className="flex space-x-6">
               <Link href="/privacy" className="text-sm text-gray-600 hover:text-gray-900">

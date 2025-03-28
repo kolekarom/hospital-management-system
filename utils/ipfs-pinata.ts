@@ -1,85 +1,108 @@
-type IPFSResponse = {
-  success: boolean;
-  cid?: string;
-  url?: string;
-  error?: string;
-  data?: any;
-};
+// Functions for interacting with Pinata IPFS service
+const PINATA_API_URL = 'https://api.pinata.cloud';
 
-export const uploadToIPFS = async (data: any): Promise<IPFSResponse> => {
+export const testPinataConnection = async () => {
   try {
-    const jwt = process.env.NEXT_PUBLIC_PINATA_JWT;
-    
-    if (!jwt) {
-      throw new Error('Pinata JWT not configured');
+    if (!process.env.NEXT_PUBLIC_PINATA_JWT) {
+      throw new Error('Pinata JWT token is not configured');
     }
 
-    // Convert data to JSON string if it's not already a string
-    const content = typeof data === 'string' ? data : JSON.stringify(data);
-    
-    // Create form data
-    const formData = new FormData();
-    const blob = new Blob([content], { type: 'application/json' });
-    formData.append('file', blob);
+    const response = await fetch(`${PINATA_API_URL}/data/testAuthentication`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${process.env.NEXT_PUBLIC_PINATA_JWT}`,
+        'Content-Type': 'application/json'
+      }
+    });
 
-    // Upload to Pinata
-    const res = await fetch('https://api.pinata.cloud/pinning/pinFileToIPFS', {
+    if (!response.ok) {
+      const error = await response.text();
+      console.error('Pinata response:', error);
+      throw new Error(`Failed to authenticate with Pinata: ${error}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Pinata authentication error:', error);
+    throw error;
+  }
+};
+
+export const pinJSONToIPFS = async (jsonData: any) => {
+  try {
+    if (!process.env.NEXT_PUBLIC_PINATA_JWT) {
+      throw new Error('Pinata JWT token is not configured');
+    }
+
+    const response = await fetch(`${PINATA_API_URL}/pinning/pinJSONToIPFS`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${jwt}`
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.NEXT_PUBLIC_PINATA_JWT}`
+      },
+      body: JSON.stringify(jsonData)
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      throw new Error(`Failed to pin JSON to IPFS: ${error}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error pinning to IPFS:', error);
+    throw error;
+  }
+};
+
+export const pinFileToIPFS = async (file: File) => {
+  try {
+    if (!process.env.NEXT_PUBLIC_PINATA_JWT) {
+      throw new Error('Pinata JWT token is not configured');
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const response = await fetch(`${PINATA_API_URL}/pinning/pinFileToIPFS`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${process.env.NEXT_PUBLIC_PINATA_JWT}`
       },
       body: formData
     });
 
-    const result = await res.json();
-
-    if (!res.ok) {
-      throw new Error(result.error?.details || 'Failed to upload to Pinata');
+    if (!response.ok) {
+      const error = await response.text();
+      throw new Error(`Failed to pin file to IPFS: ${error}`);
     }
 
-    return {
-      success: true,
-      cid: result.IpfsHash,
-      url: `https://gateway.pinata.cloud/ipfs/${result.IpfsHash}`,
-    };
+    return await response.json();
   } catch (error) {
-    console.error('Error uploading to IPFS:', error);
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Unknown error occurred',
-    };
+    console.error('Error pinning file to IPFS:', error);
+    throw error;
   }
 };
 
-export const getFromIPFS = async (cid: string): Promise<IPFSResponse> => {
+export const getFromIPFS = async (ipfsHash: string) => {
   try {
-    // Try to fetch from Pinata gateway
-    const response = await fetch(`https://gateway.pinata.cloud/ipfs/${cid}`);
+    const response = await fetch(`https://gateway.pinata.cloud/ipfs/${ipfsHash}`);
     
     if (!response.ok) {
-      throw new Error(`Failed to fetch from IPFS: ${response.statusText}`);
+      const error = await response.text();
+      throw new Error(`Failed to fetch from IPFS: ${error}`);
     }
 
-    const content = await response.text();
-    
+    const text = await response.text();
     try {
-      // Try to parse as JSON
-      return {
-        success: true,
-        data: JSON.parse(content),
-      };
+      // Try to parse as JSON first
+      return JSON.parse(text);
     } catch {
-      // If not JSON, return as string
-      return {
-        success: true,
-        data: content,
-      };
+      // If not JSON, return as text
+      return text;
     }
   } catch (error) {
-    console.error('Error getting from IPFS:', error);
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Unknown error occurred',
-    };
+    console.error('Error fetching from IPFS:', error);
+    throw error;
   }
 };

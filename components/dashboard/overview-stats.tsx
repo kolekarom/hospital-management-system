@@ -87,16 +87,16 @@ export function OverviewStats() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-muted-foreground">{stat.title}</p>
-                <p className="text-3xl font-bold">
+                <div className="text-3xl font-bold">
                   {stat.loading ? (
                     <div className="h-8 w-16 animate-pulse bg-muted rounded" />
                   ) : (
-                    <>
+                    <span>
                       {stat.prefix}
                       {stat.value.toLocaleString()}
-                    </>
+                    </span>
                   )}
-                </p>
+                </div>
                 <p className="text-xs text-muted-foreground mt-1">{stat.description}</p>
               </div>
               <div className="p-2 bg-primary/10 rounded-full text-primary">{stat.icon}</div>
